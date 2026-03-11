@@ -1,51 +1,43 @@
-[19:09:10] === McDonald's Order Controller Simulation (FAST mode) ===
-[19:09:10] BOT ADDED     → Bot#1 created
-[19:09:10]   PENDING=[(empty)]  PROCESSING=[(none)]  COMPLETE=[(none)]
-[19:09:10] ORDER ADDED   → #1 [NORMAL]
-[19:09:10]   PENDING=[#1(NORMAL)]  PROCESSING=[(none)]  COMPLETE=[(none)]
-[19:09:10] ORDER PICKUP  → Bot#1 picked up Order#1 [NORMAL]
-[19:09:10]   PENDING=[(empty)]  PROCESSING=[(none)]  COMPLETE=[(none)]
-[19:09:10] ORDER ADDED   → #2 [NORMAL]
-[19:09:10]   PENDING=[#2(NORMAL)]  PROCESSING=[Bot1→#1]  COMPLETE=[(none)]
-[19:09:10] ORDER ADDED   → #3 [NORMAL]
-[19:09:10]   PENDING=[#2(NORMAL), #3(NORMAL)]  PROCESSING=[Bot1→#1]  COMPLETE=[(none)]
-[19:09:10] ORDER ADDED   → #4 [VIP]
-[19:09:10]   PENDING=[#4(VIP), #2(NORMAL), #3(NORMAL)]  PROCESSING=[Bot1→#1]  COMPLETE=[(none)]
-[19:09:10] BOT ADDED     → Bot#2 created
-[19:09:10]   PENDING=[#4(VIP), #2(NORMAL), #3(NORMAL)]  PROCESSING=[Bot1→#1]  COMPLETE=[(none)]
-[19:09:10] ORDER PICKUP  → Bot#2 picked up Order#4 [VIP]
-[19:09:10]   PENDING=[#2(NORMAL), #3(NORMAL)]  PROCESSING=[Bot1→#1]  COMPLETE=[(none)]
-[19:09:10] --- Removing Bot#2 mid-process ---
-[19:09:10] ORDER RETURNED→ Order#4 [VIP] back to PENDING
-[19:09:10]   PENDING=[#4(VIP), #2(NORMAL), #3(NORMAL)]  PROCESSING=[Bot1→#1]  COMPLETE=[(none)]
-[19:09:10] BOT REMOVED   → Bot#2 destroyed
-[19:09:10]   PENDING=[#4(VIP), #2(NORMAL), #3(NORMAL)]  PROCESSING=[Bot1→#1]  COMPLETE=[(none)]
-[19:09:10]   PENDING=[#4(VIP), #2(NORMAL), #3(NORMAL)]  PROCESSING=[Bot1→#1]  COMPLETE=[(none)]
-[19:09:11] ORDER DONE    → Order#1 [NORMAL] is COMPLETE
-[19:09:11]   PENDING=[#4(VIP), #2(NORMAL), #3(NORMAL)]  PROCESSING=[(none)]  COMPLETE=[#1]
-[19:09:11] ORDER PICKUP  → Bot#1 picked up Order#4 [VIP]
-[19:09:11]   PENDING=[#2(NORMAL), #3(NORMAL)]  PROCESSING=[(none)]  COMPLETE=[#1]
-[19:09:11] --- New VIP customer arrives ---
-[19:09:11] ORDER ADDED   → #5 [VIP]
-[19:09:11]   PENDING=[#5(VIP), #2(NORMAL), #3(NORMAL)]  PROCESSING=[Bot1→#4]  COMPLETE=[#1]
-[19:09:11] --- Adding Bot#3 ---
-[19:09:11] BOT ADDED     → Bot#3 created
-[19:09:11]   PENDING=[#5(VIP), #2(NORMAL), #3(NORMAL)]  PROCESSING=[Bot1→#4]  COMPLETE=[#1]
-[19:09:11] ORDER PICKUP  → Bot#3 picked up Order#5 [VIP]
-[19:09:11]   PENDING=[#2(NORMAL), #3(NORMAL)]  PROCESSING=[Bot1→#4]  COMPLETE=[#1]
-[19:09:12] ORDER DONE    → Order#4 [VIP] is COMPLETE
-[19:09:12]   PENDING=[#2(NORMAL), #3(NORMAL)]  PROCESSING=[Bot3→#5]  COMPLETE=[#1, #4]
-[19:09:12] ORDER PICKUP  → Bot#1 picked up Order#2 [NORMAL]
-[19:09:12]   PENDING=[#3(NORMAL)]  PROCESSING=[Bot3→#5]  COMPLETE=[#1, #4]
-[19:09:12] ORDER DONE    → Order#5 [VIP] is COMPLETE
-[19:09:12]   PENDING=[#3(NORMAL)]  PROCESSING=[Bot1→#2]  COMPLETE=[#1, #4, #5]
-[19:09:12] ORDER PICKUP  → Bot#3 picked up Order#3 [NORMAL]
-[19:09:12]   PENDING=[(empty)]  PROCESSING=[Bot1→#2]  COMPLETE=[#1, #4, #5]
-[19:09:13] ORDER DONE    → Order#2 [NORMAL] is COMPLETE
-[19:09:13]   PENDING=[(empty)]  PROCESSING=[Bot3→#3]  COMPLETE=[#1, #4, #5, #2]
-[19:09:13] ORDER DONE    → Order#3 [NORMAL] is COMPLETE
-[19:09:13]   PENDING=[(empty)]  PROCESSING=[(none)]  COMPLETE=[#1, #4, #5, #2, #3]
-[19:09:15] 
-[19:09:15] === Final State ===
-[19:09:15]   PENDING=[(empty)]  PROCESSING=[(none)]  COMPLETE=[#1, #4, #5, #2, #3]
-[19:09:15] === Simulation Complete ===
+[15:29:03] ORDER ADDED    → #1 [NORMAL]
+[15:29:03]   PENDING=[#1(NORMAL)]  PROCESSING=[(none)]  COMPLETE=[(none)]
+[15:29:04] ORDER ADDED    → #2 [NORMAL]
+[15:29:04]   PENDING=[#1(NORMAL), #2(NORMAL)]  PROCESSING=[(none)]  COMPLETE=[(none)]
+[15:29:04] ORDER ADDED    → #3 [NORMAL]
+[15:29:04]   PENDING=[#1(NORMAL), #2(NORMAL), #3(NORMAL)]  PROCESSING=[(none)]  COMPLETE=[(none)]
+[15:29:05] ORDER ADDED    → #4 [VIP]
+[15:29:05]   PENDING=[#4(VIP), #1(NORMAL), #2(NORMAL), #3(NORMAL)]  PROCESSING=[(none)]  COMPLETE=[(none)]
+[15:29:05] ORDER ADDED    → #5 [NORMAL]
+[15:29:05]   PENDING=[#4(VIP), #1(NORMAL), #2(NORMAL), #3(NORMAL), #5(NORMAL)]  PROCESSING=[(none)]  COMPLETE=[(none)]
+[15:29:06] BOT ADDED      → Bot#1 created
+[15:29:06]   PENDING=[#4(VIP), #1(NORMAL), #2(NORMAL), #3(NORMAL), #5(NORMAL)]  PROCESSING=[(none)]  COMPLETE=[(none)]
+[15:29:06] ORDER PICKUP   → Bot#1 picked up Order#4 [VIP]
+[15:29:06]   PENDING=[#1(NORMAL), #2(NORMAL), #3(NORMAL), #5(NORMAL)]  PROCESSING=[(none)]  COMPLETE=[(none)]
+[15:29:06] BOT ADDED      → Bot#2 created
+[15:29:06]   PENDING=[#1(NORMAL), #2(NORMAL), #3(NORMAL), #5(NORMAL)]  PROCESSING=[Bot1→#4]  COMPLETE=[(none)]
+[15:29:06] ORDER PICKUP   → Bot#2 picked up Order#1 [NORMAL]
+[15:29:06]   PENDING=[#2(NORMAL), #3(NORMAL), #5(NORMAL)]  PROCESSING=[Bot1→#4]  COMPLETE=[(none)]
+[15:29:08] BOT ADDED      → Bot#3 created
+[15:29:08]   PENDING=[#2(NORMAL), #3(NORMAL), #5(NORMAL)]  PROCESSING=[Bot1→#4, Bot2→#1]  COMPLETE=[(none)]
+[15:29:08] ORDER PICKUP   → Bot#3 picked up Order#2 [NORMAL]
+[15:29:08]   PENDING=[#3(NORMAL), #5(NORMAL)]  PROCESSING=[Bot1→#4, Bot2→#1]  COMPLETE=[(none)]
+[15:29:09] ORDER RETURNED → Order#2 [NORMAL] back to PENDING
+[15:29:09]   PENDING=[#3(NORMAL), #5(NORMAL), #2(NORMAL)]  PROCESSING=[Bot1→#4, Bot2→#1]  COMPLETE=[(none)]
+[15:29:09] BOT REMOVED    → Bot#3 destroyed
+[15:29:09]   PENDING=[#3(NORMAL), #5(NORMAL), #2(NORMAL)]  PROCESSING=[Bot1→#4, Bot2→#1]  COMPLETE=[(none)]
+[15:29:16] ORDER COMPLETE → Order#4 [VIP] is DONE
+[15:29:16]   PENDING=[#3(NORMAL), #5(NORMAL), #2(NORMAL)]  PROCESSING=[Bot2→#1]  COMPLETE=[#4]
+[15:29:16] ORDER PICKUP   → Bot#1 picked up Order#3 [NORMAL]
+[15:29:16]   PENDING=[#5(NORMAL), #2(NORMAL)]  PROCESSING=[Bot2→#1]  COMPLETE=[#4]
+[15:29:16] ORDER COMPLETE → Order#1 [NORMAL] is DONE
+[15:29:16]   PENDING=[#5(NORMAL), #2(NORMAL)]  PROCESSING=[Bot1→#3]  COMPLETE=[#4, #1]
+[15:29:16] ORDER PICKUP   → Bot#2 picked up Order#5 [NORMAL]
+[15:29:16]   PENDING=[#2(NORMAL)]  PROCESSING=[Bot1→#3]  COMPLETE=[#4, #1]
+[15:29:26] ORDER COMPLETE → Order#3 [NORMAL] is DONE
+[15:29:26]   PENDING=[#2(NORMAL)]  PROCESSING=[Bot2→#5]  COMPLETE=[#4, #1, #3]
+[15:29:26] ORDER PICKUP   → Bot#1 picked up Order#2 [NORMAL]
+[15:29:26]   PENDING=[(empty)]  PROCESSING=[Bot2→#5]  COMPLETE=[#4, #1, #3]
+[15:29:26] ORDER COMPLETE → Order#5 [NORMAL] is DONE
+[15:29:26]   PENDING=[(empty)]  PROCESSING=[Bot1→#2]  COMPLETE=[#4, #1, #3, #5]
+[15:29:36] ORDER COMPLETE → Order#2 [NORMAL] is DONE
+[15:29:36]   PENDING=[(empty)]  PROCESSING=[(none)]  COMPLETE=[#4, #1, #3, #5, #2]
+[15:30:04] === Session ended ===

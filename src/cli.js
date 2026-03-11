@@ -1,24 +1,7 @@
 #!/usr/bin/env node
 "use strict";
 
-/**
- * cli.js — Simulates the McDonald's order controller and writes result.txt.
- *
- * Scenario:
- *   1. Add Bot #1
- *   2. Add Normal Order #1  → Bot #1 picks it up immediately
- *   3. Add Normal Order #2  → queued (PENDING)
- *   4. Add Normal Order #3  → queued (PENDING)
- *   5. Add VIP Order #4     → jumps ahead of normals in PENDING
- *   6. Add Bot #2           → picks up VIP Order #4
- *   7. Remove Bot #2 (5 s after creation, mid-processing) → VIP #4 returns to PENDING
- *   8. Wait for Bot #1 to finish Order #1 (t=10 s)        → Bot #1 picks up VIP #4 next
- *   9. Add VIP Order #5     → queued behind VIP #4 still in PENDING? No — #4 is being
- *      processed, so #5 goes to the front of remaining normals.
- *  10. Add Bot #3           → processes Order #5 (next VIP)
- *  11. Wait for all orders to complete.
- */
-
+const readline = require("readline");
 const fs = require("fs");
 const path = require("path");
 const { OrderController, ORDER_TYPE } = require("./OrderController");
@@ -55,83 +38,93 @@ function printState(ctrl) {
   log(`  PENDING=[${pending}]  PROCESSING=[${processing}]  COMPLETE=[${complete}]`);
 }
 
-// ─── Simulation ──────────────────────────────────────────────────────────────
+function printMenu() {
+  console.log("\n┌─────────────────────────────────────┐");
+  console.log("│   McDonald's Order Controller        │");
+  console.log("├─────────────────────────────────────┤");
+  console.log("│  1. New Normal Order                 │");
+  console.log("│  2. New VIP Order                    │");
+  console.log("│  3. + Bot                            │");
+  console.log("│  4. - Bot                            │");
+  console.log("│  5. Exit                             │");
+  console.log("└─────────────────────────────────────┘");
+  process.stdout.write("> ");
+}
 
-// Use 10 s for realistic output; pass --fast to use 1 s per order for quick CI runs.
-const FAST = process.argv.includes("--fast");
-const PROC_MS = FAST ? 1_000 : 10_000;
-
-log(`=== McDonald's Order Controller Simulation (${FAST ? "FAST" : "NORMAL"} mode) ===`);
+// ─── Setup ───────────────────────────────────────────────────────────────────
 
 const ctrl = new OrderController({
-  processingTimeMs: PROC_MS,
+  processingTimeMs: 10_000,
   onEvent(event, data) {
     switch (event) {
       case "ORDER_ADDED":
-        log(`ORDER ADDED   → #${data.order.id} [${data.order.type}]`);
+        log(`ORDER ADDED    → #${data.order.id} [${data.order.type}]`);
         break;
       case "ORDER_PROCESSING":
-        log(`ORDER PICKUP  → Bot#${data.bot.id} picked up Order#${data.order.id} [${data.order.type}]`);
+        log(`ORDER PICKUP   → Bot#${data.bot.id} picked up Order#${data.order.id} [${data.order.type}]`);
         break;
       case "ORDER_COMPLETE":
-        log(`ORDER DONE    → Order#${data.order.id} [${data.order.type}] is COMPLETE`);
+        log(`ORDER COMPLETE → Order#${data.order.id} [${data.order.type}] is DONE`);
         break;
       case "ORDER_RETURNED":
-        log(`ORDER RETURNED→ Order#${data.order.id} [${data.order.type}] back to PENDING`);
+        log(`ORDER RETURNED → Order#${data.order.id} [${data.order.type}] back to PENDING`);
         break;
       case "BOT_ADDED":
-        log(`BOT ADDED     → Bot#${data.bot.id} created`);
+        log(`BOT ADDED      → Bot#${data.bot.id} created`);
         break;
       case "BOT_REMOVED":
-        log(`BOT REMOVED   → Bot#${data.bot.id} destroyed`);
+        log(`BOT REMOVED    → Bot#${data.bot.id} destroyed`);
         break;
     }
     printState(ctrl);
+    process.stdout.write("\n> ");
   },
 });
 
-// Step 1 — Add first bot
-ctrl.addBot();
+// ─── Interactive CLI ──────────────────────────────────────────────────────────
 
-// Step 2-4 — Three normal orders
-ctrl.addOrder(ORDER_TYPE.NORMAL);
-ctrl.addOrder(ORDER_TYPE.NORMAL);
-ctrl.addOrder(ORDER_TYPE.NORMAL);
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout,
+  terminal: false,
+});
 
-// Step 5 — VIP order (cuts in line)
-ctrl.addOrder(ORDER_TYPE.VIP);
+console.log("\n🍔 Welcome to McDonald's Order Controller!");
+console.log("Each order takes 10 seconds to process.\n");
+printMenu();
 
-// Step 6 — Second bot (picks up VIP #4)
-ctrl.addBot();
+rl.on("line", (input) => {
+  const choice = input.trim();
 
-// Step 7 — Remove Bot#2 halfway through processing → VIP order returns to PENDING
-const HALF = Math.floor(PROC_MS / 2);
-setTimeout(() => {
-  log("--- Removing Bot#2 mid-process ---");
-  ctrl.removeBot();
-  printState(ctrl);
-}, HALF);
+  switch (choice) {
+    case "1":
+      ctrl.addOrder(ORDER_TYPE.NORMAL);
+      break;
+    case "2":
+      ctrl.addOrder(ORDER_TYPE.VIP);
+      break;
+    case "3":
+      ctrl.addBot();
+      break;
+    case "4":
+      ctrl.removeBot();
+      break;
+    case "5":
+      log("=== Session ended ===");
+      fs.writeFileSync(OUTPUT_FILE, LINES.join("\n") + "\n", "utf8");
+      console.log(`\nResults written to: ${OUTPUT_FILE}`);
+      process.exit(0);
+      break;
+    default:
+      console.log("Invalid input. Please enter 1, 2, 3, 4, or 5.");
+      process.stdout.write("> ");
+  }
+});
 
-// Step 9 — Another VIP order arrives
-setTimeout(() => {
-  log("--- New VIP customer arrives ---");
-  ctrl.addOrder(ORDER_TYPE.VIP);
-}, HALF + 500);
-
-// Step 10 — Add third bot
-setTimeout(() => {
-  log("--- Adding Bot#3 ---");
-  ctrl.addBot();
-}, HALF + 600);
-
-// Step 11 — Give enough time for all orders to complete, then write result.txt
-const TOTAL_WAIT = PROC_MS * 5;
-setTimeout(() => {
-  log("");
-  log("=== Final State ===");
-  printState(ctrl);
-  log("=== Simulation Complete ===");
-
+rl.on("close", () => {
+  // Handle piped input (used in CI / run.sh)
+  log("=== Session ended ===");
   fs.writeFileSync(OUTPUT_FILE, LINES.join("\n") + "\n", "utf8");
   console.log(`\nResults written to: ${OUTPUT_FILE}`);
-}, TOTAL_WAIT);
+  process.exit(0);
+});
