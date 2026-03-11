@@ -72,7 +72,7 @@ class OrderController {
    */
   constructor(options = {}) {
     this._processingTimeMs = options.processingTimeMs ?? 10_000;
-    this._onEvent = options.onEvent ?? (() => {});
+    this._onEvent = options.onEvent ?? (() => { });
 
     this._nextOrderId = 1;
     this._nextBotId = 1;
@@ -119,18 +119,23 @@ class OrderController {
   removeBot() {
     if (this._bots.length === 0) return null;
 
-    // Remove the newest bot (last in array)
     const bot = this._bots.pop();
     const returnedOrder = bot.destroy();
 
     if (returnedOrder) {
-      // Re-insert the returned order at the correct position in the queue
-      if (returnedOrder.type === ORDER_TYPE.VIP) {
-        const insertAt = this._lastVipIndex() + 1;
-        this._pendingQueue.splice(insertAt, 0, returnedOrder);
-      } else {
+      // Find the correct position based on type AND original order ID
+      const insertAt = this._pendingQueue.findIndex((o) => {
+        if (returnedOrder.type === ORDER_TYPE.VIP && o.type === ORDER_TYPE.NORMAL) return true;
+        if (returnedOrder.type === o.type && returnedOrder.id < o.id) return true;
+        return false;
+      });
+
+      if (insertAt === -1) {
         this._pendingQueue.push(returnedOrder);
+      } else {
+        this._pendingQueue.splice(insertAt, 0, returnedOrder);
       }
+
       this._onEvent("ORDER_RETURNED", { order: returnedOrder });
     }
 
